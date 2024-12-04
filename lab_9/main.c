@@ -31,47 +31,52 @@ int is_vowel(char c) {
     return (c == 'a' || c == 'e' || c == 'i' || c == 'y' || c == 'o'); 
 } 
  
-char** create(const char* s) { 
-    char** result = (char**)malloc(sizeof(char*)); 
-    if (!result) { 
-        printf("ERROR: Memory allocation failed\n"); 
-        exit(1); 
-    } 
-    result[0] = NULL; 
- 
-    int index = 0; 
-    int word_start = -1; 
- int i; 
-    for (i = 0; i <= strlen(s); i++) { 
+char** create(const char* s) {
+    char** result = (char**)malloc(sizeof(char*));
+    if (!result) {
+        printf("ERROR: Memory allocation failed\n");
+        exit(1);
+    }
+    result[0] = NULL;
+
+    int index = 0;
+    int word_start = -1;
+
+    for (int i = 0; i <= strlen(s); i++) {
         if (isalpha(s[i])) { 
-            if (word_start == -1) { 
-                word_start = i;  
-            } 
+            if (word_start == -1 && (i == 0 || s[i - 1] == ' ')) {
+                word_start = i; 
+            }
         } else if (word_start != -1) { 
-            if (is_vowel(s[i - 1])) { 
-                int len = i - word_start;  
-                char* word = (char*)malloc(len + 1); 
-                if (!word) { 
-                    printf("ERROR: Memory allocation failed\n"); 
-                    exit(1); 
-                } 
+            if (s[i] == '.' || s[i] == ',' || s[i] == ';' || s[i] == ' ' || s[i] == ':' || s[i] == '\0') { 
+                int len = i - word_start; 
+                char* word = (char*)malloc(len + 1);
+                if (!word) {
+                    printf("ERROR: Memory allocation failed\n");
+                    exit(1);
+                }
                 strncpy(word, s + word_start, len); 
-                word[len] = '\0';  
- 
-                result[index] = word; 
-                index++; 
-                result = (char**)realloc(result, (index + 1) * sizeof(char*)); 
-                if (!result) { 
-                    printf("ERROR: Memory allocation failed\n"); 
-                    exit(1); 
-                } 
-                result[index] = NULL;  
-            } 
-            word_start = -1; 
-        } 
-    } 
-    return result; 
-} 
+                word[len] = '\0';
+
+                if (is_vowel(word[len - 1])) {
+                    result[index] = word;
+                    index++;
+                    result = (char**)realloc(result, (index + 1) * sizeof(char*));
+                    if (!result) {
+                        printf("ERROR: Memory allocation failed\n");
+                        exit(1);
+                    }
+                    result[index] = NULL;
+                } else {
+                    free(word); 
+                }
+            }
+            word_start = -1;
+        }
+       
+    }
+    return result;
+}
  
  
 char* delete(const char* s, int k) { 
