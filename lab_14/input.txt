@@ -1,0 +1,3 @@
+"to add a" -info
+"to 37rgknv arr & laba. main" -create
+"1 22246522 1163 124 evsf 124" -delete 2
